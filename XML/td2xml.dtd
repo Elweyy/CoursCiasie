@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE COMMANDES[
+<!ELEMENT COMMANDES (BON*)>
+<!ELEMENT BON (ENTREPRISE, ORGANISATION, DATE, MONTANT,DETAIL)>
+<!ELEMENT ENTREPRISE (NOM,ADRESSE, TELEPHONE, FAX, ROLE)>
+<!ELEMENT DETAIL (PRODUIT+)>
+<!ELEMENT PRODUIT (REF, INTITULE, QUANTITE,PRIX_UNITAIRE)>
+<!ELEMENT NOM (#PCDATA)>
+<!ELEMENT ADRESSE (#PCDATA)>
+<!ELEMENT TELEPHONE (#PCDATA)>
+<!ELEMENT FAX (#PCDATA)>
+<!ELEMENT ROLE (#PCDATA)>
+<!ELEMENT INTITULE (#PCDATA)>
+<!ELEMENT QUANTITE (#PCDATA)>
+<!ELEMENT PRIX_UNITAIRE (#PCDATA)>
+<!ATTLIST BON ID ID #REQUIRED>
+<!ATTLIST ENTREPRISE ID CDATA #REQUIRED>
+<!ATTLIST PRODUIT ID CDATA #REQUIRED>
+<!ATTLIST ROLE CDATA (EMETTEUR | CLIENT) "NONE">
+]>
+
+<COMMANDES>
+    <BON ID='B156'>
+        <ENTREPRISE ID='E12' ROLE="EMETTEUR">
+            <NOM> BEEZIM </NOM>
+            <ADRESSE> LUDRES </ADRESSE>
+            <TELEPHONE> 03.33.33.33.33 </TELEPHONE>
+            <FAX> 03.34.34.34.34 </FAX>
+            <ROLE> EMETTEUR </ROLE>
+        </ENTREPRISE>
+        <ENTREPRISE ID='E13' ROLE="CLIENT">
+            <NOM> ZIMBEE </NOM>
+            <ADRESSE> SERDUL </ADRESSE>
+            <TELEPHONE> 04.33.33.33.33 </TELEPHONE>
+            <FAX> 04.34.34.34.34 </FAX>
+        </ENTREPRISE>
+        <DETAIL>
+            <PRODUIT ID='P1' >
+                <INTITULE> UN EMPLOYÉ</INTITULE>
+                <QUANTITE> 1 </QUANTITE>
+                <PRIX_UNITAIRE> 950 </PRIX_UNITAIRE>
+            </PRODUIT>
+            <PRODUIT ID='P2'>
+                <INTITULE> RYZEN 2700X </INTITULE>
+                <QUANTITE> 3 </QUANTITE>
+                <PRIX_UNITAIRE> 350 </PRIX_UNITAIRE>
+            </PRODUIT>
+            <PRODUIT ID='P3'>
+                <INTITULE> CHAISE </INTITULE>
+                <QUANTITE> 200 </QUANTITE>
+                <PRIX_UNITAIRE> 10 </PRIX_UNITAIRE>
+            </PRODUIT>
+        </DETAIL>
+    </BON>
+
+    <BON ID='B260'>
+        <ENTREPRISE ID='E12' ROLE="EMETTEUR">
+            <NOM> BEEZIM </NOM>
+            <ADRESSE> LUDRES </ADRESSE>
+            <TELEPHONE> 03.33.33.33.33 </TELEPHONE>
+            <FAX> 03.34.34.34.34 </FAX>
+        </ENTREPRISE>
+        <ENTREPRISE ID='E13' ROLE="CLIENT">
+            <NOM> ZIMBEE </NOM>
+            <ADRESSE> SERDUL </ADRESSE>
+            <TELEPHONE> 04.33.33.33.33 </TELEPHONE>
+            <FAX> 04.34.34.34.34 </FAX>
+        </ENTREPRISE>
+        <DETAIL>
+            <PRODUIT ID='P1'>
+                <INTITULE> UN EMPLOYÉ</INTITULE>
+                <QUANTITE> 1 </QUANTITE>
+                <PRIX_UNITAIRE> 950 </PRIX_UNITAIRE>
+            </PRODUIT>
+            <PRODUIT ID='P14'>
+                <INTITULE> RYZEN 2700X </INTITULE>
+                <QUANTITE> 3 </QUANTITE>
+                <PRIX_UNITAIRE> 350 </PRIX_UNITAIRE>
+            </PRODUIT>
+            <PRODUIT ID='P565'>
+                <INTITULE> CHAISE </INTITULE>
+                <QUANTITE> 200 </QUANTITE>
+                <PRIX_UNITAIRE> 10 </PRIX_UNITAIRE>
+            </PRODUIT>
+        </DETAIL>
+    </BON>
+</COMMANDES>

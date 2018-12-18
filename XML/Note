@@ -1,0 +1,5 @@
+appli meteo velo 
+
+geoloc IP -> coordonnées -> météo -> fichier xls qui affiche météo
+vérifier que l'api répond, code d'erreurs, etc 
+

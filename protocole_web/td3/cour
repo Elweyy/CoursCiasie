@@ -1,0 +1,46 @@
+FROM ubuntu:xenial
+# ENV http_proxy="" https_proxy="" --> utiliser la commande printenv pour afficher les variables d'environnements
+RUN apt-get update \
+    && apt-get -y install apache2 vim nano \
+    && apt-get clean \
+    && rm -rf /var/cache/apt/*
+EXPOSE 80 443
+CMD ["/usr/sbin/apachectl","-D","FOREGROUND"]
+
+# docker build -t apache .
+# docker run -d -p 100:80 apache
+# docker run -d -p 100:80 -v $PWD/html:/var/www/html/ ubuntu_apache
+# log dans /var/log/apache2/error.log log d'acces --> access.log
+# commande pour activer le site --> a2ensite 001-vhost1
+# verification de la config  --> apache2 configtest return OK
+# rechargement config apache --> apachectl graceful return OK
+# en dehors du docker modifier resolution de nom --> dans /etc/hosts --> ajouter 127.0.0.1 vhost1.local <ip> <alias1> <alias2> ...
+# pour enregistrer les modifs ds l'image docker (fabrique une autre image) --> docker commit <nomImageOrigine> <NouvelleImage>
+
+
+# <VirtualHost *:80>
+#     ServerName vhost1.local: --> ajouter ds /etc/hosts dan votre poste de travail (pas docker)
+#     Document Root /var/www/vhost1
+#     LogLevel alert(ou info/warning) rewrite:trace4
+# <Directory /var/www/vhost1>
+#     DirectoryIndex dir.html
+#     Allowoverride FileInfo
+#     Options Followssymlinks
+# </Directory>
+
+# Activer le site :
+# a2ensite vhost1
+# relancer apache
+# apachectl graceful
+#             configtest
+
+
+1. RewriteEngine On
+	RewriteRule ^test/test.html$	/
+2. RewriteRule ^test/.*$	/
+3.Rewritecond /var/www/vhost1/test/$1 -f
+	RewriteRule ^test([^/]*)	/$1
+4.RewriteRule ^(.*)\.php$	$1.html
+
+
+

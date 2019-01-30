@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Vue.js</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+        crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+</head>
+
+<body>
+    <div id="application">
+        <p>Afficher une variable JS : {{variableExample}} </p>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el:"#application",
+            data : {
+                variableExample: 'peut mieux faire'
+            }
+
+        });
+        
+    </script>
+
+</body>
+
+</html>

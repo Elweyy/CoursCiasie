@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Exo</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+
+
+</head>
+
+<body>
+    <div id="application">
+        <h1>Variables calculées</h1>
+
+        <input type="text" v-model="name">
+        &nbsp;
+        <input type="text" v-model="surname">
+
+        <p> Le nom complet est : {{nomComplet}} </p>
+
+    </div>
+
+
+    <script>
+        // Vue.config.devtools = true;
+        var app = new Vue({
+            el: '#application',
+
+            data: {
+                name:"John",
+                surname:"Deacon",
+
+            },
+
+            methods: {
+                
+            },
+
+            computed: {
+                // emplacement où effectue les calculs à réaliser quand l'évènement ONREADY est ok
+
+                nomComplet(){
+                    // doit retourner une valeur calculée à partir d'autres variables 
+                    return this.name + " " + this.surname
+                }
+
+            }
+        })
+    </script>
+
+
+    <style>
+        
+    </style>
+</body>
+
+</html>

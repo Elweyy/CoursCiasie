@@ -3,29 +3,202 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Vue.js</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
-        crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <title>Vue JS</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <!-- <script src="promise.js"></script> -->
+
+    <!-- prod -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+
+    <!-- dev -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+    <!-- <script src="promise-chain.js"></script> -->
+
 
 </head>
 
 <body>
     <div id="application">
-        <p>Afficher une variable JS : {{variableExample}} </p>
+        <h1 v-bind:title='infoDate'>Premier cours de Vue 2.0.js</h1>
+        <p>Afficher une variable javascript : {{variableExemple}}</p>
+        <p>Afficher calcul : {{calcul}}</p>
+
+        <!-- la directive v-text remplace le contenu complet de la balise -->
+        <!-- l'actualisation ne marche que avec les methodes comme push,pop,shift,unshift,slice,sort,reverse -->
+        <!-- l'acces direct a un element du tableau par l'index tab[2] ne modifie pas la page en direct -->
+        <p v-text="chaine2"></p>
+
+        <p v-if="contientDuTexte">Cette ligne ne s'affichera que si la variable contientDuTexte
+            n'est pas vide ou bien est vraie : {{contientDuTexte}}
+        </p>
+
+        <p v-else>Probleme de connexion au serveur</p>
+
+        <p class='color-green'>
+            Créer une div fixe qui sert de debugger en haut a droite
+        </p>
+        <br>
+
+        <p>Affichage d'un objet <br>
+            {{objet}}
+        </p>
+
+        <!-- v-model est utilisable uniquement avec input,select et textarea la liaison se fait dans les deux sens -->
+        <input type="text" id="test1" v-model="message">
+        <p>variable message : {{message}}</p>
+
+
+        <h4>Liste des prénoms</h4>
+
+        <p>la liste est issue d'un array</p>
+
+        <ul>
+            <li v-for="(name,i) in names">
+                <button v-on:click="names.splice(i,1)">{{name}}</button>
+            </li>
+        </ul>
+
+        <input type="text" id="ajoutnom" v-model="newName">
+        <button v-on:click="addName"> Ajouter le prénom à la liste</button>
+
+
+        <h2 v-bind:class="className">Ce titre a une classe attribuée dynamiquement</h2>
+
+        <button v-on:click="desactivateButtonBelow">
+            Désactive le bouton ci-dessous
+        </button>
+
+        <br>
+
+        <button v-bind:class="{'etatclique' : dataIsBool}" v-on:click="toggleClass" v-bind:disabled="btActivated">
+            change la couleur du bouton
+        </button>
+
+        <br>
+
+        <button v-bind:disabled="btActivated">activable/desactivable - 2</button>
+
+        <br>
+
+        <button v-bind:disabled="btActivated">activable/desactivable - 3</button>
+
+        <div v-bind:class="pos">
+                <h2>Debug</h2>
+                <button v-bind:click="moveDebug">Move</button>
+                <ul>
+
+                </ul>
+            </div>
+
     </div>
-
     <script>
+        // Vue.config.devtools = true;
         var app = new Vue({
-            el:"#application",
-            data : {
-                variableExample: 'peut mieux faire'
+            el: '#application',
+            data: {
+                infoDate: 'Vous avez atteint cette page le ' + new Date().toLocaleString(),
+                variableExemple: 'peu mieux faire !',
+                calcul: 7 + 2,
+                chaine2: 'on s\'y efforce',
+                message: 'modifier ce texte',
+                names: ['Joe', 'Noa', 'Steve', 'Raymonde'],
+                newName:'',
+                className: 'color-red',
+
+                fixedPos : 1,
+                pos :"positionDebug1",
+                dataIsBool: true,
+                btActivated: false,
+
+                contientDuTexte: true,
+
+                objet:{
+                    text:'yo',
+                    num:26,
+                    type:'caucasien'
+                }
+            },
+            methods: {
+                toggleClass() {
+                    // Inverse la valeur du booléen utilisé pour que le bouton change couleur
+                    this.dataIsBool = !this.dataIsBool;
+                },
+                desactivateButtonBelow() {
+                    // Inverse la valeur du booléen utilisé sur le bouton 'désactiver'
+                    // Lorsque le booléen est à false l'attribut html n'est pas utilisé
+                    this.btActivated = !this.btActivated;
+                },
+            
+                addName(){
+                    // Ajoute le nom saisi dans l'input à la liste des noms
+                    if(this.newName){
+                        this.names.push(this.newName);
+                        this.newName = "";
+                    }
+
+                },
+
+                moveDebug(){
+                    this.fixedPos = this.fixedPos + 1;
+                    if(this.fixedPos>4){
+                        this.fixedPos = 1}
+                    this.pos = "positionDebug"+this.fixedPos;     
+                }
+            },
+
+            computed: {
+
+                
+
             }
-
-        });
-        
+        })
     </script>
+    <style>
+        .color-red {
+            color: red;
+        }
 
+        .color-green {
+            color: green;
+        }
+
+        .etatclique {
+            background-color: lightgreen;
+        }
+        .positionDebug1{
+            position:fixed;
+            width: 200px;
+            background-color:lightcoral;
+            padding:3%;
+            right:0;
+            top:0;
+        }
+        .positionDebug2{
+            position:fixed;
+            width: 200px;
+            background-color:lightcoral;
+            padding:3%;
+            right:0;
+            bottom:0;
+        }
+        .positionDebug3{
+            position:fixed;
+            width: 200px;
+            background-color:lightcoral;
+            padding:3%;
+            left:0;
+            top:0;
+        }
+        .positionDebug4{
+            position:fixed;
+            width: 200px;
+            background-color:lightcoral;
+            padding:3%;
+            left:0;
+            bottom:0;
+        }
+    </style>
 </body>
 
 </html>

@@ -41,7 +41,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Pays</th>
-                        <th scope="col"><Nombre de smartphones></th>
+                        <th scope="col" v-on:click="invertSort" v-bind:class="order === 1 ? 'descending' : 'ascending'" class="clicable">Nombre de smartphones</th>
 
                     </tr>
                 </thead>
@@ -79,6 +79,14 @@
             },
 
             methods: {
+
+                invertSort(){
+                    // inverse l'ordre de tri du tableau 
+                    // params : vide
+                    // return : ordre de tri 
+
+                    this.order = this.order * -1;
+                },
 
                 changeStatus(tache) {
                     // Change le status de la tache 
@@ -124,6 +132,20 @@
         .beautiful {
             background-color: lightslategray;
         }
+
+        .ascending::after{
+            content:'\25B2';
+        }
+
+        .descending::after{
+            content:'\25BC';
+        }
+
+        .clicable:hover {
+            cursor: pointer;
+            
+        }
+
     </style>
 </body>
 

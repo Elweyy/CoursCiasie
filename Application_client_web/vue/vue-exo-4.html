@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title> Vue Exo 4</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+    <div class="col-md-10 offset-md-1" id="application">
+
+        <h1> Formater des valeurs</h1>
+
+        <h1> Prix des smartphones</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Modèle</th>
+                    <th scope="col">Tarif</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="mobile in listOfMobiles">
+                    <td>{{mobile.model}}</td>
+                    <td>{{mobile.price}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        </ul>
+
+    </div>
+
+
+    <script>
+
+
+        
+
+
+
+        // Vue.config.devtools = true;
+        var app = new Vue({
+            el: '#application',
+
+            data: {
+
+                listOfMobiles:[
+                 {model:"Huawei Y6", price : 226.4},
+                 {model:"iPhone", price : 1215},
+                 {model:"One +6", price : 540.5},
+                 {model:"Wiko", price : 67.55},
+                 {model:"Samsung Galaxy", price : null}
+                ]
+
+            },
+
+            methods: {
+
+
+
+            },
+
+            computed: {
+
+            }
+
+        
+        });
+    </script>
+
+
+    <style>
+
+    </style>
+</body>
+
+</html>

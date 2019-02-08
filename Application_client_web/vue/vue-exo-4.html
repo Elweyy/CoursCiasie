@@ -7,6 +7,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/accounting.js/0.3.2/accounting.js"></script>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
         integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
@@ -24,27 +26,40 @@
             <thead>
                 <tr>
                     <th scope="col">Modèle</th>
-                    <th scope="col">Tarif</th>
+                    <th class="monnaie" scope="col">Tarif</th>
 
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="mobile in listOfMobiles">
-                    <td>{{mobile.model}}</td>
-                    <td>{{mobile.price}}</td>
+                <tr v-for="mobile in listOfMobiles" v-show="mobile.price">
+                    <td>{{mobile.model | uppercase}}</td>
+                    <td class="monnaie">{{mobile.price | monetaire}}</td>
                 </tr>
             </tbody>
         </table>
 
+        <p>Nombres de caractères maximum : 60</p>
+        <textarea v-bind:class="isAlmostFull" v-model="monTwit" rows="3" cols="30" v-bind:maxlength="limit"></textarea>
+
+
+        <p>{{monTwit.length}}</p>
         </ul>
 
     </div>
 
 
     <script>
+        // Pour créer des filtres ( au sens de vue.js) ils doivent être déclarés avant de créer l'instance de Vue
 
+        Vue.filter('uppercase', function (chaine) {
+            // on créé un filtre nommé 'uppercase' qui transforme la chaîne
+            return chaine.toUpperCase();
+        })
 
-        
+        Vue.filter('monetaire', function (money) {
+            // transforme un chiffre en affichage monétaire euro 
+            return accounting.formatMoney(money, "€", 2, " ", ",");
+        })
 
 
 
@@ -54,14 +69,17 @@
 
             data: {
 
-                listOfMobiles:[
-                 {model:"Huawei Y6", price : 226.4},
-                 {model:"iPhone", price : 1215},
-                 {model:"One +6", price : 540.5},
-                 {model:"Wiko", price : 67.55},
-                 {model:"Samsung Galaxy", price : null}
-                ]
+                listOfMobiles: [
+                    { model: "Huawei Y6", price: 226.4 },
+                    { model: "iPhone", price: 1215 },
+                    { model: "One +6", price: 540.5 },
+                    { model: "Wiko", price: 67.55 },
+                    { model: "Samsung Galaxy", price: null }
+                ],
 
+                monTwit: "",
+                className: "",
+                limit:60
             },
 
             methods: {
@@ -72,15 +90,36 @@
 
             computed: {
 
+                isAlmostFull() {
+                    if (this.limit - this.monTwit.length <=20 ) {
+                        if (this.monTwit.length < this.limit) {
+                            return "almostFull";
+                        } else {
+                            return "fullyFull";
+                        }
+                    }
+                },
+
             }
 
-        
+
         });
     </script>
 
 
     <style>
+        .monnaie {
+            text-align: right
+        }
 
+        .almostFull {
+            background-color: mistyrose;
+        }
+
+        .fullyFull {
+            background-color: rgb(153, 57, 13);
+
+        }
     </style>
 </body>
 

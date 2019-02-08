@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title> Vue Exo 5</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/accounting.js/0.3.2/accounting.js"></script>
+
+    <script src="https://unpkg.com/axios@0.18.0/dist/axios.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+
+    <div id="application">
+
+        <h1>Utilisation d'Axios avec Vue.js</h1>
+
+        <h3>Bitcoin Price Index</h3>
+        <p>{{infoBrute['data']['bpi']}}</p>
+
+
+
+
+    </div>
+
+    <script>
+
+
+
+
+        // Vue.config.devtools = true;
+        var app = new Vue({
+            el: '#application',
+
+            data: {
+                infoBrute:'...',
+            },
+
+            methods: {
+
+
+
+            },
+
+            computed: {
+
+            },
+
+
+            created() {
+            // l'instance de Vue a terminé de traiter les options, les éléments suivants sont prêts :
+            // data, computed, methods 
+                axios
+                .get('https://api.coindesk.com/v1/bpi/currentprice.json')
+                .then( response => {
+                    this.infoBrute = response;
+                })
+                .catch( error =>{
+                    console.log(error)
+                })
+
+            }
+
+
+        });
+    </script>
+
+
+    <style>
+        .monnaie {
+            text-align: right
+        }
+
+        .almostFull {
+            background-color: mistyrose;
+        }
+
+        .fullyFull {
+            background-color: rgb(153, 57, 13);
+
+        }
+    </style>
+</body>
+
+</html>

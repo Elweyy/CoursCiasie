@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title> Vue Exo 2</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+
+
+</head>
+
+<body>
+    <div id="application">
+        <h1>Liste d'expériences scientifiques</h1>
+
+        <p>Afficher la liste des expériences et leur coût :</p>
+        <ul>
+            <li v-for="experiment in experiments">
+                {{experiment.name}}, coût : {{experiment.cost}} millions eurals
+            </li>
+        </ul>
+
+
+        <p>Afficher la liste des expériences de Physique et leur coût :</p>
+        <ul>
+            <li v-for="experiment in filteredExperimentsByPhysic">
+                {{experiment.name}}, coût : {{experiment.cost}} millions eurals
+            </li>
+        </ul>
+
+
+        <p>Afficher la liste des expériences dont le coût est inférieur ou égal à 50 millions d'eurals :</p>
+        <ul>
+            <li v-for="experiment in filteredExperimentsByCost">
+                {{experiment.name}}, coût : {{experiment.cost}} millions eurals
+            </li>
+        </ul>
+
+        <p>Afficher la liste des expériences dont le coût est inférieur ou égal à 50 millions d'eurals et qui sont de
+            Physique :</p>
+        <ul>
+            <li v-for="experiment in filteredExperiments">
+                {{experiment.name}}, coût : {{experiment.cost}} millions eurals
+            </li>
+        </ul>
+    </div>
+
+
+    <script>
+        // Vue.config.devtools = true;
+        var app = new Vue({
+            el: '#application',
+
+            data: {
+                experiments: [
+                    { name: "Accélérateur d'Ions RHIC", cost: 650, field: "Physique" },
+                    { name: "Observatoire sous marin", cost: 2250, field: "Biologie" },
+                    { name: "Violoniste dans le métro", cost: 2, field: "Psychologie" },
+                    { name: "Accélérateur de particules", cost: 7700, field: "Physique" },
+                    { name: "Détecteur de particules -DIY", cost: 0, field: "Physique" },
+                    { name: "Mission de sauvetage des tortues", cost: 125, field: "Biologie" },
+                ]
+            },
+
+            methods: {
+                isPhysic(list) {
+                    // filtre le tableau list pour garder les items où field = Physique 
+                    // params: list = tableau à filtrer 
+                    // return : un tableau filtré 
+
+                    /*                     good_list = [];
+                    
+                                        for(i in list){
+                                            if(i.field == "Physique"){
+                                                good_list.push(i);
+                                            } 
+                                        }
+                                        return good_list; */
+
+                    good_list = list.filter(el => el.field == "Physique");
+
+                    return good_list;
+                },
+
+                isCheaper(list) {
+
+                    good_list = list.filter(el => el.cost <= 50);
+
+                    return good_list;
+
+                },
+
+
+            },
+
+            computed: {
+
+                filteredExperimentsByPhysic() {
+                    // calcule et retourne la liste des expériences filtrées
+                    return this.isPhysic(this.experiments);
+                },
+
+                filteredExperimentsByCost() {
+                    // calcule et retourne la liste des expériences filtrées
+                    return this.isCheaper(this.experiments);
+                },
+
+                filteredExperiments() {
+
+                    return this.isCheaper(this.isPhysic(this.experiments))
+                }
+
+
+            }
+        })
+    </script>
+
+
+    <style>
+
+    </style>
+</body>
+
+</html>

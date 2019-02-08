@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title> Vue Exo 3</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+        crossorigin="anonymous">
+
+
+</head>
+
+<body>
+    <div class="col-md-10 offset-md-1" id="application">
+
+        <ul>
+            <p>Tâches </p>
+            <li v-bind:class="{'achieved': tache.done}" v-for="tache in taches">
+
+                {{tache.tache}} : {{tache.done ? "Done" : "Nope"}}
+
+                <button v-bind:class="{beautiful: !tache.done}" v-on:click="changeStatus(tache)">Change !</button>
+
+            </li>
+
+            <p>Tâches à faire</p>
+            <li v-bind:class="{'achieved': tache.done}" v-for="tache in undoned">
+
+                {{tache.tache}}
+
+
+            </li>
+
+
+            <h1> Trier les éléments d'une liste dynamiquement</h1>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Pays</th>
+                        <th scope="col"><Nombre de smartphones></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="stat in statsByNbOfMobile">
+                        <td>{{stat.country}}</td>
+                        <td>{{stat.nbMobile}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </ul>
+
+    </div>
+
+
+    <script>
+        // Vue.config.devtools = true;
+        var app = new Vue({
+            el: '#application',
+
+            data: {
+
+                taches: [{ tache: "Ménage", done: true }, { tache: "Course", done: false },
+                { tache: "Lessive", done: false }, { tache: "Glander", done: true }],
+            
+                stats:[
+                    {country:"USA", nbMobile:226},
+                    {country:"Chine", nbMobile:713},
+                    {country:"Russie", nbMobile:78.5},
+                    {country:"Inde", nbMobile:300.24},
+
+                ],
+                order:1
+            },
+
+            methods: {
+
+                changeStatus(tache) {
+                    // Change le status de la tache 
+                    //params = tache: la tache à modifier 
+
+                    tache.done = !tache.done
+                },
+
+                undoneList(list) {
+                    // Filtre la listre avec uniquement les tâches pas faites
+                    //params = list: la listre à filtrer
+
+                    return list.filter(i => i.done == false)
+                }
+
+
+            },
+
+            computed: {
+
+                undoned() {
+                    return this.undoneList(this.taches)
+                },
+
+                statsByNbOfMobile(){
+                    //Trie le tableau par nombre de mobile
+                    // return : tableay trié dans l'ordre 
+
+                    return this.stats.sort((d1,d2) => (d2.nbMobile - d1.nbMobile)*this.order)
+                }
+
+            }
+        })
+    </script>
+
+
+    <style>
+        .achieved {
+            color: grey;
+            text-decoration: line-through;
+        }
+
+        .beautiful {
+            background-color: lightslategray;
+        }
+    </style>
+</body>
+
+</html>

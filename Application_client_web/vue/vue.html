@@ -86,9 +86,7 @@
         <div v-bind:class="pos">
                 <h2>Debug</h2>
                 <button v-bind:click="moveDebug">Move</button>
-                <ul>
-
-                </ul>
+                <p v-html="showDebug"></p>
             </div>
 
     </div>
@@ -117,7 +115,9 @@
                     text:'yo',
                     num:26,
                     type:'caucasien'
-                }
+                },
+                
+                                
             },
             methods: {
                 toggleClass() {
@@ -144,11 +144,28 @@
                     if(this.fixedPos>4){
                         this.fixedPos = 1}
                     this.pos = "positionDebug"+this.fixedPos;     
-                }
+                },
+
+
+
             },
 
             computed: {
 
+                showDebug: function(){
+
+                    let varList = [
+                        "message",
+                        "chaine2",
+                        "chaine2.length"
+                    ];
+
+                    let debugString='';
+                    varList.forEach( item => {
+                        debugString += item + ' -> ' + '<b>' + eval('this.'+item) + '</b>' + '<br/>' 
+                    });
+                    return debugString
+                }
                 
 
             }

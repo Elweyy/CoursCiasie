@@ -24,16 +24,69 @@
         <h1>Utilisation d'Axios avec Vue.js</h1>
 
         <h3>Bitcoin Price Index</h3>
-        <p>{{infoBrute['data']['bpi']}}</p>
 
 
+        <section v-if="errored">
+            <p> We're sorry, we are not able to retrieve this information at the moment, please try later.</p>
+            <p> Error: <br> {{ErrorText}}</p>
+        </section>
 
+        <section v-else>
+
+            <div v-if="loading">Afficher le spinner ici ....</div>
+
+            <div id="affichebitcoin">
+
+                {{infoBitCoin}}
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Monnaie</th>
+                            <th class="monnaie" scope="col">Taux de change</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="currency in infoBitCoin">
+                            <td>{{currency['description']}}</td>
+                            <td class="monnaie">{{currency | monetaire}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div v-if="loading">Afficher le spinner ici ...</div>
+
+                <div v-else id="afficherbitcoin" v-for="currency in infoBitCoin">
+                    <p> {{currency.description}} <span v-html="currency.symbol"> </span> {{currency.rate_float | monetaire2 }}</p>
+                </div>
+
+
+            </div>
+
+        </section>
 
     </div>
 
     <script>
 
+        Vue.filter('monetaire', function (money) {
+            if (money['code']  == 'USD')
+                // transforme un chiffre en affichage monétaire euro 
+                return accounting.formatMoney(money['rate_float'], "$ ", 2, " ", ",");
+            if (money['code']  == 'EUR')
+                // transforme un chiffre en affichage monétaire euro 
+                return accounting.formatMoney(money['rate_float'], "€ ", 2, " ", ",");
+            if (money['code']  == 'GBP')
+                // transforme un chiffre en affichage monétaire euro 
+                return accounting.formatMoney(money['rate_float'], "£ ", 2, " ", ",");
+        })
 
+
+        Vue.filter('monetaire2', function (money) {
+            // transforme un chiffre en affichage monétaire euro 
+            return accounting.formatMoney(money, "", 2, " ", ",");
+        })
 
 
         // Vue.config.devtools = true;
@@ -41,7 +94,13 @@
             el: '#application',
 
             data: {
-                infoBrute:'...',
+
+                loading: true,
+                errored: false,
+                ErrorText: '',
+
+                infoBrute: '...',
+                infoBitCoin: '',
             },
 
             methods: {
@@ -56,16 +115,25 @@
 
 
             created() {
-            // l'instance de Vue a terminé de traiter les options, les éléments suivants sont prêts :
-            // data, computed, methods 
+                // l'instance de Vue a terminé de traiter les options, les éléments suivants sont prêts :
+                // data, computed, methods 
                 axios
-                .get('https://api.coindesk.com/v1/bpi/currentprice.json')
-                .then( response => {
-                    this.infoBrute = response;
-                })
-                .catch( error =>{
-                    console.log(error)
-                })
+                    .get('https://api.coindesk.com/v1/bpi/currentprice.json')
+                    .then(response => {
+                        this.infoBrute = response;
+                        this.infoBitCoin = response.data.bpi;
+                    })
+                    .catch(error => {
+                        this.errored = true;
+                        console.log(error);
+                        this.ErrorText = error;
+                    })
+                    .finally(() => {
+                        // Cette méthode est appelée quand le callback d'une promise est exécutée : resolve ou reject peu import 
+                        // Cela évite de dupliquer le traitement dans le then ou le catch
+                        this.loading = false;
+
+                    })
 
             }
 
@@ -79,14 +147,6 @@
             text-align: right
         }
 
-        .almostFull {
-            background-color: mistyrose;
-        }
-
-        .fullyFull {
-            background-color: rgb(153, 57, 13);
-
-        }
     </style>
 </body>
 

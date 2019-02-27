@@ -1,0 +1,16 @@
+Travail pour le contrôle continu
+
+
+Réaliser un module permettant d'effecter des recherchers à l'aide de l'api musicBrainz en utilisant:
+- Vue.js et ses components 
+- Bootstrap ou tout autre framework CSS 
+
+L'objectif est de séparer au maximum le contenu, la forme et le développement. Vous veillerez à ce que le code soit modulaire et maintenable.
+
+La recherche doit permettre à minima la recherche d'artistes ou de titres 
+L'affichage doit être abouti, actuel (material design ou flat design) et le plus complet possible 
+Des liens doivent permettre de naviguer dans les résultats de recherche 
+On doit pouvoir afficher: 
+- la liste des artistes avec ses détails 
+- la liste des titres ou albums d'un artistes 
+- associer des pictogrammes ( voir flaticon) avec chaque type de résultat 

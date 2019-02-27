@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title> PROJET</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/accounting.js/0.3.2/accounting.js"></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    
+
+</head>
+
+<body>
+
+    <div id="application">
+        <label for="name">Make a search on MusicBrainz</label>
+        <br>
+
+        <input v-model="cat" type="radio" name="cat" value="artist"> Artiste<br>
+        <input v-model="cat" type="radio" name="cat" value="recording"> Chanson<br>
+        <input v-model="search" type="text" id="name" name="name" required> <br>
+        <button v-on:click="searchOn(cat,search)">Search</button>
+        
+
+    </div>
+
+    <script src="test.js"></script>
+
+    <script>
+
+        // Vue.config.devtools = true;
+        var app = new Vue({
+            el: '#application',
+
+            data: {
+                search:"",
+                cat:"artist",
+
+                info:'',
+                
+                errored:false,
+                loading:true,
+                ErrorText:""
+
+            },
+
+            methods: {
+
+                searchOn(cat,search){
+                    axios.defaults.crossDomain=true;
+                    axios
+                    .get('https://musicbrainz.org/ws/2/'+cat+'/?query='+search+"&fmt=json", {
+                        proxy: {
+                            host:'http://www-cache.iutnc.univ-lorraine.fr/',
+                            port:3128
+                        }
+                    })
+                    .then(response => {
+                        this.info = response;
+                        console.log(this.info['data'])
+                    })
+                    .catch(error => {
+                        this.errored = true;
+                        console.log(error);
+                        this.ErrorText = error;
+                    })
+                    .finally(()=> {
+                        this.loading = false;
+                    })
+                }
+
+            },
+
+            computed: {
+
+            },
+
+
+            created() {
+
+            },
+
+            mounted () {
+
+            }
+            
+        });
+    </script>
+
+
+    <style>
+
+    </style>
+</body>
+
+</html>

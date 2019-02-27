@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title> Vue Exo 7</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/accounting.js/0.3.2/accounting.js"></script>
+
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    
+
+</head>
+
+<body>
+
+    <div id="application">
+        <h1>Ajuster une icone avec les components</h1>
+
+        <label> Sound level :</label>
+        <input type="number" min="0" max="3" v-model:number="soundLevel" >
+        <soundicon v-bind:level="soundLevel"></soundicon>
+
+
+
+    </div>
+
+    <script src="sound-component.js"></script>
+
+    <script>
+
+        // Vue.config.devtools = true;
+        var app = new Vue({
+            el: '#application',
+
+            data: {
+                soundLevel:0,
+
+
+            },
+
+            methods: {
+
+
+
+            },
+
+            computed: {
+
+            },
+
+
+            created() {
+
+            }
+
+
+        });
+    </script>
+
+
+    <style>
+
+    </style>
+</body>
+
+</html>

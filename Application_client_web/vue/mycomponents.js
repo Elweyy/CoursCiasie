@@ -1,5 +1,6 @@
 /* components réutilisables */
 // IMPORTANT les components doivent être déclarés avant l'instance de Vue
+// utilisé dans l'exo 6
 
 
 Vue.component('mylist',{

@@ -2,15 +2,38 @@
  * Components pour vue-exo-7.html
  */
 Vue.component('soundicon', {
-    template: `<span>{{soundEmojis[level]}}</span>`,
+    template: 
+    `
+    <div>
+    <p>
+    <span>{{soundEmojis[level]}}</span>
+    <input type="text" v-model="userMood">
+    <button v-on:click="$emit('newmood')">Send</button>
+    </p>
+    <button v-on:click="$emit('voladonf')"> Mettre à fond</button>
+    <button v-on:click="$emit('volazero')"> Couper tout</button>
+
+    </div>`,
     props: ['level'],
     data() {
         return {
-            soundEmojis: ['🔇', '🔈', '🔉', '🔊']
+            soundEmojis: ['🔇', '🔈', '🔉', '🔊'],
+            userMood: '...',
         }
     }
 });
 
+
+Vue.component('spinner',{
+    template:`
+    <div class="spinner">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+    </div>`
+})
 
 /**
  * 

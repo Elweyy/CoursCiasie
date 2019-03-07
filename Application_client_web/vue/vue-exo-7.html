@@ -25,9 +25,15 @@
 
         <label> Sound level :</label>
         <input type="number" min="0" max="3" v-model:number="soundLevel" >
-        <soundicon v-bind:level="soundLevel"></soundicon>
+        <soundicon ref="soundvue" v-bind:level="soundLevel" v-on:voladonf="maxVol" v-on:volazero="zeroVol" v-on:newmood="setMood"></soundicon>
 
 
+
+        <p>You feel like : {{newUserMood}}</p>
+
+
+        <link rel="stylesheet" href="spinner.css" />
+        <spinner></spinner>
 
     </div>
 
@@ -41,12 +47,24 @@
 
             data: {
                 soundLevel:0,
-
+                newUserMood:'',
 
             },
 
             methods: {
+                maxVol(){
+                    //met le volume à fond 
+                    this.soundLevel = 3;
+                },
+                zeroVol(){
+                    // met le volume à 0 :)
+                    this.soundLevel = 0;
+                },
 
+                setMood(){
+                    //recupère la valeur de userMood du component pour l'afficher
+                    this.newUserMood = this.$refs.soundvue.userMood;
+                }
 
 
             },

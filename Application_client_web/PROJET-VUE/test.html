@@ -21,14 +21,22 @@
 <body>
 
     <div id="application">
-        <label for="name">Make a search on MusicBrainz</label>
+        <h1><label for="name">Make a search on MusicBrainz</label></h1>
         <br>
 
         <input v-model="cat" type="radio" name="cat" value="artist"> Artiste<br>
-        <input v-model="cat" type="radio" name="cat" value="recording"> Chanson<br>
-        <input v-model="search" type="text" id="name" name="name" required> <br>
-        <button v-on:click="searchOn(cat,search)">Search</button>
+        <input v-model="cat" type="radio" name="cat" value="recording">Chanson<br>
+        <input v-model="cat" type="radio" name="cat" value="cdstub">Album<br>
+
+        <input v-model="search" v-on:keyup.enter="searchOn(cat,search)" type="text" id="name" name="name" required> <br>
+        <button type="button" class="btn btn-primary" v-on:click="searchOn(cat,search)">Search</button>
+
         
+        <div v-if="resulcat == 'artist'"> <artist-list v-bind:infomusic="infos"></artist-list></div>
+        <div v-else-if="resulcat == 'recording'"> <music-list v-bind:infomusic="infos"></music-list></div>
+        
+        https://wireframe.cc/pEhyu0
+        https://wireframe.cc/rQ3slX
 
     </div>
 
@@ -43,8 +51,9 @@
             data: {
                 search:"",
                 cat:"artist",
-
-                info:'',
+                resulcat:'',
+                infos:'',
+                albumlist:[],
                 
                 errored:false,
                 loading:true,
@@ -53,6 +62,40 @@
             },
 
             methods: {
+                listAlbum(search){
+                    var convertSearch = encodeURIComponent(search)
+                    axios.defaults.crossDomain=true;
+                    axios
+                    .get('https://musicbrainz.org/ws/2/cdstub/?query=artist:'+convertSearch+'&fmt=json', {
+                        proxy: {
+                            host:'http://www-cache.iutnc.univ-lorraine.fr/',
+                            port:3128
+                        }
+                    })
+                .then(response => {
+                    var albums =response['data']['cdstubs']
+                    // for(album in albums){
+                    //     this.albumlist.push(album.title)
+                        
+                    //     console.log(album)
+                        for(var i= 0; i< albums.length;i++){
+                            var obj = albums[i]['title']
+                            this.albumlist.push(obj)                       
+                        }
+                    //}
+                        // console.log(this.albumlist)
+                        // console.log('https://musicbrainz.org/ws/2/cdstub/?query=artist:'+search+"&fmt=json")
+                        console.log(this.albumlist)
+                    })
+                    .catch(error => {
+                        this.errored = true;
+                        //console.log(error);
+                        this.ErrorText = error;
+                    })
+                    .finally(()=> {
+                        this.loading = false;
+                    })
+                },
 
                 searchOn(cat,search){
                     axios.defaults.crossDomain=true;
@@ -64,8 +107,14 @@
                         }
                     })
                     .then(response => {
-                        this.info = response;
-                        console.log(this.info['data'])
+                        this.resulcat = this.cat
+                        this.infos = response['data'][cat+'s'];
+                        console.log(this.infos)
+                        for(var i= 0; i< this.infos.length;i++){
+                            var obj = this.infos[i]['name']
+                            this.listAlbum(obj)
+                        }
+                        
                     })
                     .catch(error => {
                         this.errored = true;
@@ -75,7 +124,7 @@
                     .finally(()=> {
                         this.loading = false;
                     })
-                }
+                },
 
             },
 

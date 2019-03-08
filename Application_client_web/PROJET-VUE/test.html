@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
         integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-    
+
 
 </head>
 
@@ -26,15 +26,37 @@
 
         <input v-model="cat" type="radio" name="cat" value="artist"> Artiste<br>
         <input v-model="cat" type="radio" name="cat" value="recording">Chanson<br>
-        <input v-model="cat" type="radio" name="cat" value="cdstub">Album<br>
+        <input v-model="cat" type="radio" name="cat" value="release">Album<br>
 
         <input v-model="search" v-on:keyup.enter="searchOn(cat,search)" type="text" id="name" name="name" required> <br>
         <button type="button" class="btn btn-primary" v-on:click="searchOn(cat,search)">Search</button>
 
-        
-        <div v-if="resulcat == 'artist'"> <artist-list v-bind:infomusic="infos"></artist-list></div>
-        <div v-else-if="resulcat == 'recording'"> <music-list v-bind:infomusic="infos"></music-list></div>
-        
+        <div v-if="resulcat == 'artist'">
+            <artist-list v-bind:infomusic="infos" v-on:showalbumsevent="showalbums"></artist-list>
+        </div>
+        <div v-else-if="resulcat == 'recording'">
+            <music-list v-bind:infomusic="infos"></music-list>
+        </div>
+
+        <div v-else-if="resulcat == 'release'">
+            <albums-list v-bind:infomusic="infos"></albums-list>
+        </div>
+
+        <div v-else-if="resulcat == 'artist-alb'">
+            <button v-if="resulcat !=''" v-on:click="goBack">Previous search</button>
+
+            <albums-art-list v-bind:infomusic="infos" v-on:showtracksevent="showTracks"></albums-art-list>
+        </div>
+
+        <div v-else-if="resulcat == 'alb-titles'">
+                <button v-if="resulcat !=''" v-on:click="goBackAlbum">Previous search</button>
+    
+                <albums-tracks-list v-bind:infomusic="infos" ></albums-tracks-list>
+            </div>
+
+
+
+
         https://wireframe.cc/pEhyu0
         https://wireframe.cc/rQ3slX
 
@@ -49,82 +71,150 @@
             el: '#application',
 
             data: {
-                search:"",
-                cat:"artist",
-                resulcat:'',
-                infos:'',
-                albumlist:[],
+                search: "",
+                cat: "artist",
+                resulcat: '',
+                infos: '',
+                albumlist: '',
                 
-                errored:false,
-                loading:true,
-                ErrorText:""
+                previousid:'',
+                previouscat: '',
+                previoussearch: '',
+
+                errored: false,
+                loading: true,
+                ErrorText: ""
 
             },
 
             methods: {
-                listAlbum(search){
-                    var convertSearch = encodeURIComponent(search)
-                    axios.defaults.crossDomain=true;
+
+                searchOn(cat, search) {
+                    //params cat : la catégorie de la recherche ( artiste, albums, ... ), 
+                    //       search : l'objet de la recherche 
+                    // return : /
+
+                    axios.defaults.crossDomain = true;
                     axios
-                    .get('https://musicbrainz.org/ws/2/cdstub/?query=artist:'+convertSearch+'&fmt=json', {
-                        proxy: {
-                            host:'http://www-cache.iutnc.univ-lorraine.fr/',
-                            port:3128
-                        }
-                    })
-                .then(response => {
-                    var albums =response['data']['cdstubs']
-                    // for(album in albums){
-                    //     this.albumlist.push(album.title)
-                        
-                    //     console.log(album)
-                        for(var i= 0; i< albums.length;i++){
-                            var obj = albums[i]['title']
-                            this.albumlist.push(obj)                       
-                        }
-                    //}
-                        // console.log(this.albumlist)
-                        // console.log('https://musicbrainz.org/ws/2/cdstub/?query=artist:'+search+"&fmt=json")
-                        console.log(this.albumlist)
-                    })
-                    .catch(error => {
-                        this.errored = true;
-                        //console.log(error);
-                        this.ErrorText = error;
-                    })
-                    .finally(()=> {
-                        this.loading = false;
-                    })
+                        .get('https://musicbrainz.org/ws/2/' + cat + '/?query=' + search + "&fmt=json&inc=artists", {
+                            proxy: {
+                                // Proxy de l'IUT
+                                host: 'http://www-cache.iutnc.univ-lorraine.fr/',
+                                port: 3128
+                            }
+                        })
+                        .then(response => {
+
+
+                            // On récupère toutes les infos 
+                            this.resulcat = this.cat
+                            this.infos = response['data'][cat + 's'];
+                            console.log(this.infos)
+
+                            this.stockBack()
+
+
+                        })
+                        .catch(error => {
+                            this.errored = true;
+                            console.log(error);
+                            this.ErrorText = error;
+                        })
+                        .finally(() => {
+                            this.loading = false;
+                        })
                 },
 
-                searchOn(cat,search){
-                    axios.defaults.crossDomain=true;
+                showalbums(id) {
+                    // Afficher les albums d'UN artiste en particulier
+                    // param : l'id de l'artiste
+                    // return : /
+
+                    axios.defaults.crossDomain = true;
                     axios
-                    .get('https://musicbrainz.org/ws/2/'+cat+'/?query='+search+"&fmt=json", {
-                        proxy: {
-                            host:'http://www-cache.iutnc.univ-lorraine.fr/',
-                            port:3128
-                        }
-                    })
-                    .then(response => {
-                        this.resulcat = this.cat
-                        this.infos = response['data'][cat+'s'];
-                        console.log(this.infos)
-                        for(var i= 0; i< this.infos.length;i++){
-                            var obj = this.infos[i]['name']
-                            this.listAlbum(obj)
-                        }
-                        
-                    })
-                    .catch(error => {
-                        this.errored = true;
-                        console.log(error);
-                        this.ErrorText = error;
-                    })
-                    .finally(()=> {
-                        this.loading = false;
-                    })
+                        .get('https://musicbrainz.org/ws/2/artist/' + id + '/?fmt=json&inc=releases', {
+                            proxy: {
+                                // Proxy de l'IUT
+                                host: 'http://www-cache.iutnc.univ-lorraine.fr/',
+                                port: 3128
+                            }
+                        })
+                        .then(response => {
+
+                            this.resulcat = 'artist-alb'
+                            // On récupère toutes les infos 
+                            this.infos = response['data']['releases']
+                            this.previousid=id
+
+                        })
+                        .catch(error => {
+                            this.errored = true;
+                            console.log(error);
+                            this.ErrorText = error;
+                        })
+                        .finally(() => {
+                            this.loading = false;
+                        })
                 },
+
+                showTracks(id){
+                    // Afficher les albums d'UN artiste en particulier
+                    // param : l'id de l'artiste
+                    // return : /
+
+                    axios.defaults.crossDomain = true;
+                    axios
+                        .get('http://musicbrainz.org/ws/2/release/'+id+'?inc=artist-credits+labels+discids+recordings&fmt=json', {
+                            proxy: {
+                                // Proxy de l'IUT
+                                host: 'http://www-cache.iutnc.univ-lorraine.fr/',
+                                port: 3128
+                            }
+                        })
+                        .then(response => {
+
+                            this.resulcat = 'alb-titles'
+                            // On récupère toutes les infos 
+                                                    
+                            this.infos = response['data']['media'][0]['tracks']
+                            console.log(this.infos)
+
+                        })
+                        .catch(error => {
+                            this.errored = true;
+                            console.log(error);
+                            this.ErrorText = error;
+                        })
+                        .finally(() => {
+                            this.loading = false;
+                        })
+
+                },
+
+                goBack() {
+                    // Permet de revenir à la recherche précédente 
+
+                    if (this.previouscat != '' && this.previoussearch != '') {
+                        this.searchOn(this.previouscat, this.previoussearch)
+                    }
+                },
+
+                goBackAlbum(){
+                    // Permet de revenir à l'album précédent recherché
+
+                    if(this.previousid !=""){
+                        this.showalbums(this.previousid)
+                    }
+                },
+
+                stockBack() {
+                    // On stock les paramètres pour un éventuel retour en arrière
+
+                    this.previouscat = this.resulcat;
+                    this.previoussearch = this.search;
+                }
+
+
 
             },
 
@@ -137,10 +227,10 @@
 
             },
 
-            mounted () {
+            mounted() {
 
             }
-            
+
         });
     </script>
 
